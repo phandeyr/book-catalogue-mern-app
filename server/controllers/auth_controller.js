@@ -45,20 +45,20 @@ exports.jwtAuthorisation = async (email, role) => {
   const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET)
 
   // Save refresh token to db
-  try {
-    const token = new RefreshToken({ refreshToken })
-    await token.save()
-  } catch (err) {
-    console.log(err)
-  }
-
+  const token = new RefreshToken({ refreshToken })
+  token.save((err) => {
+    if (err) {
+      return ({ message: 'An unexpected error occurred' })
+    }
+    return null
+  })
   return ({ accessToken, refreshToken })
 }
 
 /**
  * Generates access token with expiry
  */
-exports.generateAccessToken = (user) => jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' })
+exports.generateAccessToken = (user) => jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '20s' })
 
 /**
  * Authenticates JWT
@@ -90,8 +90,8 @@ exports.refreshToken = (req, res) => {
   if (token == null) {
     res.status(401).send()
   }
-  RefreshToken.find({ refreshToken: token }, (err) => {
-    if (err) {
+  RefreshToken.findOne({ refreshToken: token }, (err, result) => {
+    if (err || result == null) {
       return res.status(403).send()
     }
 
@@ -113,12 +113,21 @@ exports.refreshToken = (req, res) => {
  * Deletes the refresh token
  */
 exports.deleteRefreshToken = async (req, res) => {
-  const { token } = req
-
-  RefreshToken.findOneAndDelete({ refreshToken: token }, (err) => {
+  const { token } = req.body
+  RefreshToken.deleteOne({ refreshToken: token }, (err) => {
     if (err) {
       res.status(500).send('Unable to delete refresh token')
     }
     res.status(204).send()
   })
+}
+
+/**
+ * Authorises user role
+ */
+exports.authoriseUserRole = (role) => (req, res, next) => {
+  if (req.user.role !== role) {
+    return res.status(401).json({ message: 'Access denied' })
+  }
+  return next()
 }
