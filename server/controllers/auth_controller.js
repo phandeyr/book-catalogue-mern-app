@@ -8,10 +8,12 @@ const RefreshToken = require('../models/refresh_token_model')
  * Authorises a user using JWT
  */
 exports.authenticateUser = async (req, res) => {
+  const { email, password } = req.body
   let user
   let passwordMatch
+
   try {
-    user = await User.find({ email: req.body.email })
+    user = await User.find({ email })
   } catch (err) {
     res.status(500).send(err)
   }
@@ -21,7 +23,7 @@ exports.authenticateUser = async (req, res) => {
   }
 
   try {
-    passwordMatch = await bcrypt.compare(req.body.password, user[0].password)
+    passwordMatch = await bcrypt.compare(password, user[0].password)
   } catch (err) {
     res.status(500).send(err)
   }
@@ -31,8 +33,12 @@ exports.authenticateUser = async (req, res) => {
   }
 
   // JWT Authorisation
-  const response = await this.jwtAuthorisation(req.body.email, user[0].role)
-  return res.json(response)
+  try {
+    const response = await this.jwtAuthorisation(email, user[0].role)
+    return res.json(response)
+  } catch (err) {
+    return res.json(err)
+  }
 }
 
 /**
@@ -46,19 +52,18 @@ exports.jwtAuthorisation = async (email, role) => {
 
   // Save refresh token to db
   const token = new RefreshToken({ refreshToken })
-  token.save((err) => {
-    if (err) {
-      return ({ message: 'An unexpected error occurred' })
-    }
-    return null
-  })
-  return ({ accessToken, refreshToken })
+  try {
+    await token.save()
+    return ({ accessToken, refreshToken })
+  } catch (err) {
+    return ({ message: 'An unexpected error occurred' })
+  }
 }
 
 /**
  * Generates access token with expiry
  */
-exports.generateAccessToken = (user) => jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '20s' })
+exports.generateAccessToken = (user) => jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '5m' })
 
 /**
  * Authenticates JWT
@@ -71,42 +76,41 @@ exports.authenticateToken = (req, res, next) => {
     return res.status(401).send()
   }
 
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-    if (err) {
-      return res.status(403).send()
-    }
+  try {
+    const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
     req.user = user
     return next()
-  })
-
-  return null
+  } catch (err) {
+    return res.status(403).send()
+  }
 }
 
 /**
  * Refreshes JWT token
  */
-exports.refreshToken = (req, res) => {
+exports.refreshToken = async (req, res) => {
   const { token } = req.body
   if (token == null) {
-    res.status(401).send()
+    return res.status(401).send()
   }
-  RefreshToken.findOne({ refreshToken: token }, (err, result) => {
-    if (err || result == null) {
+
+  try {
+    const result = await RefreshToken.findOne({ refreshToken: token })
+    if (result == null) {
       return res.status(403).send()
     }
+  } catch (err) {
+    res.status(403).send()
+  }
 
-    // Verify token
-    jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (error, data) => {
-      if (error) {
-        return res.status(403).send()
-      }
-
-      const accessToken = this.generateAccessToken({ email: data.email, role: data.role })
-      return res.json(accessToken)
-    })
-
-    return null
-  })
+  // Verify token
+  try {
+    const data = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET)
+    const accessToken = this.generateAccessToken({ email: data.email, role: data.role })
+    return res.json({ accessToken })
+  } catch (err) {
+    return res.status(403).send()
+  }
 }
 
 /**
@@ -114,12 +118,12 @@ exports.refreshToken = (req, res) => {
  */
 exports.deleteRefreshToken = async (req, res) => {
   const { token } = req.body
-  RefreshToken.deleteOne({ refreshToken: token }, (err) => {
-    if (err) {
-      res.status(500).send('Unable to delete refresh token')
-    }
+  try {
+    await RefreshToken.deleteOne({ refreshToken: token })
     res.status(204).send()
-  })
+  } catch (err) {
+    res.status(500).send()
+  }
 }
 
 /**
