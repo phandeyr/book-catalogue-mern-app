@@ -1,12 +1,26 @@
 const Book = require('../models/book_model')
+const Author = require('../models/author_model')
 
 /**
- * Creates and saves a book to the db
+ * Creates and saves a book to the db.
+ * Attempts to find the author by name, else creates it.
  */
 exports.createBook = async (req, res) => {
-  const book = new Book(req.body)
+  const { body } = req
+  const { firstName, lastName } = req.body.author
   try {
-    const result = await book.save()
+    let author = await Author.findOne({ firstName, lastName })
+    if (author == null) {
+      author = await new Author({ firstName, lastName }).save()
+    }
+
+    const result = await new Book({
+      title: body.title,
+      description: body.description,
+      // eslint-disable-next-line no-underscore-dangle
+      author: author._id
+    }).save()
+
     if (result) {
       res.status(201).json(result)
     }
