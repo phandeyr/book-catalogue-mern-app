@@ -1,0 +1,14 @@
+{
+    "extends": "react-app",
+    "rules": {
+        "semi": [
+            "error",
+            "never"
+        ],
+        "comma-dangle": [
+            "error", 
+            "never"
+        ],
+        "no-console": "off"
+    }
+}
