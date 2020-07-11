@@ -19,7 +19,7 @@ exports.authenticateUser = async (req, res) => {
   }
 
   if (user.length === 0) {
-    return res.status(404).json({ message: 'User not found' })
+    return res.status(404).json({ message: 'Invalid username and/or password' })
   }
 
   try {
@@ -29,7 +29,7 @@ exports.authenticateUser = async (req, res) => {
   }
 
   if (!passwordMatch) {
-    return res.status(403).json({ message: 'Not Allowed' })
+    return res.status(403).json({ message: 'Invalid username and/or password' })
   }
 
   // JWT Authorisation
