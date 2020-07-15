@@ -1,8 +1,9 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import LocalStorage from '../utils/local_storage'
+import Alert from 'react-bootstrap/Alert'
 
 class LoginForm extends Component {
   constructor(props) {
@@ -57,11 +58,11 @@ class LoginForm extends Component {
     }
 
     return (
-      <Fragment>
-        { this.state.errMsg ? <p>{this.state.errMsg}</p> : null }
+      <div class='text-center'>
+        { this.state.errMsg ? <Alert variant='danger' onClose={() => this.setState({ errMsg : '' })} dismissible>{this.state.errMsg}</Alert> : null }
         <Form onSubmit={e => this.handleSubmit(e)}>
+          <h4>Member Login</h4>
           <Form.Group>
-            <Form.Label>Email</Form.Label>
             <Form.Control 
               required
               name='email'
@@ -70,7 +71,6 @@ class LoginForm extends Component {
               onChange={e => this.setState({ email: e.target.value })}/>
           </Form.Group>
           <Form.Group>
-            <Form.Label>Password</Form.Label>
             <Form.Control 
               required
               name='password'
@@ -78,9 +78,9 @@ class LoginForm extends Component {
               placeholder='Password'
               onChange={e => this.setState({ password: e.target.value })}/>
           </Form.Group>
-          <Button variant='primary' type='submit'>Login</Button>
+          <Button type='submit'>Login</Button>
         </Form>
-      </Fragment>
+      </div>
     )
   }
 }

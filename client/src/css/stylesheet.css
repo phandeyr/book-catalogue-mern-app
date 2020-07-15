@@ -1,0 +1,26 @@
+.container {
+    margin-top: 100px;
+}
+
+form {
+    border: 1px solid;
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 3px 3px 5px rgba(0,0,0,0.5);
+    width:40%;
+    display: inline-block;
+}
+
+h4 {
+    padding-bottom: 10px;
+}
+
+.form-control {
+    background: #f6f6f6 !important;
+}
+
+.btn-primary {
+    background-color: #56baed !important;
+    border-color: #56baed !important;
+    width: 50%;
+}
