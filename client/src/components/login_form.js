@@ -41,8 +41,8 @@ class LoginForm extends Component {
       return res.json()
     })
     .then((data) => {
-      this.setState({ logged_in: true })
       LocalStorage.setToken(data)
+      this.setState({ logged_in: true })
     })
     .catch((err) => {
       err.json()

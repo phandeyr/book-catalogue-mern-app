@@ -16,6 +16,9 @@ class BookList extends Component {
     this.getBooks()
   }
 
+  /**
+   * Invokes API to retrieve all books - setting headers
+   */
   getBooks() {
     const headers = { 
       'Content-Type': 'application/json',
@@ -38,6 +41,9 @@ class BookList extends Component {
     .catch(console.log)
   }
 
+  /**
+   * Columns to display in bootstrap table
+   */
   getColumns() {
     return [{
       dataField: 'title',
@@ -48,13 +54,14 @@ class BookList extends Component {
     }]
   }
 
+  /**
+   * Config options for bootstrap table
+   */
   getOptions() {
     return { showTotal: true }
   }
 
   render() {
-    console.log('in booklist')
-
     if (this.state.isLoading) {
       return 'loading'
     }
