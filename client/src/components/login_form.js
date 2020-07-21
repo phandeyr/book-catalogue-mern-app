@@ -8,7 +8,7 @@ import Alert from 'react-bootstrap/Alert'
 class LoginForm extends Component {
   constructor(props) {
     super(props)
-    
+
     this.state = {
       email: '',
       password: '',
@@ -43,6 +43,7 @@ class LoginForm extends Component {
     .then((data) => {
       LocalStorage.setToken(data)
       this.setState({ logged_in: true })
+      this.props.handleState(true)
     })
     .catch((err) => {
       err.json()

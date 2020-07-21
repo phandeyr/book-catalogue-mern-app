@@ -8,7 +8,7 @@ import { Role } from '../utils/roles'
  * Returns navbar depending on whether user is authenticated and their role
  */
 const Navigation = () => {
-  
+
   return (
     <Navbar fixed='top' bg='dark' variant='dark'>
         <Navbar.Brand>Book Catalogue</Navbar.Brand>
@@ -16,13 +16,13 @@ const Navigation = () => {
         {(!LocalStorage.isAuthenticated()) ? <Nav.Link>Login</Nav.Link> :
           LocalStorage.getUserRole() === Role.ADMIN_ROLE ?
           <Fragment>
-            <Nav.Link>Home</Nav.Link>
+            <Nav.Link href='/books'>Home</Nav.Link>
             <Nav.Link>Add Book</Nav.Link>
             <Nav.Link>Add Author</Nav.Link>
             <Nav.Link href='/' onClick={() => LocalStorage.clearToken()}>Logout</Nav.Link>
           </Fragment> :
           <Fragment>
-            <Nav.Link>Home</Nav.Link>
+            <Nav.Link href='/books'>Home</Nav.Link>
             <Nav.Link href='/' onClick={() => LocalStorage.clearToken()}>Logout</Nav.Link>
           </Fragment>
         }

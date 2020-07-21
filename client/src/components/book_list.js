@@ -1,7 +1,8 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import LocalStorage from '../utils/local_storage'
 import paginationFactory from 'react-bootstrap-table2-paginator'
 import BootstrapTable from 'react-bootstrap-table-next'
+import Spinner from 'react-bootstrap/Spinner'
 
 class BookList extends Component {
   constructor(props) {
@@ -63,18 +64,26 @@ class BookList extends Component {
 
   render() {
     if (this.state.isLoading) {
-      return 'loading'
+      return (
+        <div className='text-center'>
+          <Spinner animation='border' role='status'/>
+          <p>Loading...</p>           
+        </div>
+      ) 
     }
 
     return (
-      <BootstrapTable
-        keyField='_id' 
-        data={ this.state.books } 
-        columns={ this.getColumns() } 
-        striped
-        hover
-        noDataIndication='There are currently no books'
-        pagination={ paginationFactory(this.getOptions()) } />
+      <Fragment>
+        <h3>Books</h3>
+        <BootstrapTable
+          keyField='_id' 
+          data={ this.state.books } 
+          columns={ this.getColumns() } 
+          striped
+          hover
+          noDataIndication='There are currently no books'
+          pagination={ paginationFactory(this.getOptions()) } />
+      </Fragment>
     )
   }
 }
