@@ -43,7 +43,7 @@ class LoginForm extends Component {
     .then((data) => {
       LocalStorage.setToken(data)
       this.setState({ logged_in: true })
-      this.props.handleState(true)
+      this.props.handleState(LocalStorage.isAuthenticated())
     })
     .catch((err) => {
       err.json()

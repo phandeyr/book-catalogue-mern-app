@@ -3,17 +3,17 @@ import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
 import LocalStorage from '../utils/local_storage'
 import { Role } from '../utils/roles'
+import { withRouter } from 'react-router'
 
 /**
  * Returns navbar depending on whether user is authenticated and their role
  */
-const Navigation = () => {
-
+const Navigation = (props) => {
   return (
     <Navbar fixed='top' bg='dark' variant='dark'>
         <Navbar.Brand>Book Catalogue</Navbar.Brand>
-        <Nav className='ml-auto'>
-        {(!LocalStorage.isAuthenticated()) ? <Nav.Link>Login</Nav.Link> :
+        <Nav activeKey={props.location.pathname} className='ml-auto'>
+        {(!props.auth) ? <Nav.Link href='/'>Login</Nav.Link> :
           LocalStorage.getUserRole() === Role.ADMIN_ROLE ?
           <Fragment>
             <Nav.Link href='/books'>Home</Nav.Link>
@@ -31,4 +31,4 @@ const Navigation = () => {
   )
 }
 
-export default Navigation
+export default withRouter(Navigation)

@@ -4,11 +4,12 @@ import Navigation from './navbar'
 import LoginForm from './login_form'
 import BookList from './book_list'
 import PrivateRoute from './private_route'
+import LocalStorage from '../utils/local_storage'
 
 class App extends Component {
   constructor(props) {
     super(props)
-    this.state = { isAuthenticated: false }
+    this.state = { isAuthenticated: LocalStorage.isAuthenticated() }
     this.handleState = this.handleState.bind(this)
   }
 
@@ -21,7 +22,7 @@ class App extends Component {
   render() {
     return (
       <Router>
-        <Navigation />
+        <Navigation auth={this.state.isAuthenticated}/>
         <div className='container'>
           <Switch>
             <Route exact path='/' component={() => <LoginForm handleState={this.handleState} />}  />
