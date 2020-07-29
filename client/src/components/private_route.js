@@ -7,7 +7,7 @@ class PrivateRoute extends Component {
 
   render() {
     const Component = this.props.component
-    return LocalStorage.isAuthenticated() ? <Component/> : <Redirect to='/'/>
+    return LocalStorage.isAuthenticated() ? <Component {...this.props}/> : <Redirect to='/'/>
   }
 }
 

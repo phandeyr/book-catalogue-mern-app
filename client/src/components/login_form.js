@@ -61,7 +61,7 @@ class LoginForm extends Component {
     return (
       <div className='text-center'>
         { this.state.errMsg ? <Alert variant='danger' onClose={() => this.setState({ errMsg : '' })} dismissible>{this.state.errMsg}</Alert> : null }
-        <Form onSubmit={e => this.handleSubmit(e)}>
+        <Form className='login' onSubmit={e => this.handleSubmit(e)}>
           <h4>Member Login</h4>
           <Form.Group>
             <Form.Control 

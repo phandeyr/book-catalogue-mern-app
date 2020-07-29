@@ -17,7 +17,7 @@ const Navigation = (props) => {
           LocalStorage.getUserRole() === Role.ADMIN_ROLE ?
           <Fragment>
             <Nav.Link href='/books'>Home</Nav.Link>
-            <Nav.Link>Add Book</Nav.Link>
+            <Nav.Link href='/books/add'>Add Book</Nav.Link>
             <Nav.Link>Add Author</Nav.Link>
             <Nav.Link href='/' onClick={() => LocalStorage.clearToken()}>Logout</Nav.Link>
           </Fragment> :

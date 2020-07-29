@@ -2,7 +2,7 @@
     margin-top: 100px;
 }
 
-form {
+form.login {
     border: 1px solid;
     padding: 15px;
     border-radius: 15px;
@@ -20,7 +20,7 @@ h4 {
     background: #f6f6f6 !important;
 }
 
-.btn-primary {
+form.login.btn-primary {
     background-color: #56baed !important;
     border-color: #56baed !important;
     width: 50%;
