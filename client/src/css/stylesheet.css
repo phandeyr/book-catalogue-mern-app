@@ -26,9 +26,13 @@ form.login.btn-primary {
     width: 50%;
 }
 
-.alert-danger {
+.alert {
     position: fixed !important;
     top: 55px;
     width: 100%;
     left: 0px;
+}
+
+.books {
+    padding-top: 15px;
 }

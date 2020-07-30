@@ -3,7 +3,8 @@ import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 import Navigation from './navbar'
 import LoginForm from './login_form'
 import BookList from './book_list'
-import Book from './book'
+import EditBook from './edit_book'
+import AddBook from './add_book'
 import PrivateRoute from './private_route'
 import LocalStorage from '../utils/local_storage'
 
@@ -28,8 +29,8 @@ class App extends Component {
           <Switch>
             <Route exact path='/' component={() => <LoginForm handleState={this.handleState} />}  />
             <PrivateRoute exact path='/books' component={BookList} />
-            <PrivateRoute path='/books/add' component={Book} />
-            <PrivateRoute path='/books/edit' component={Book} />
+            <PrivateRoute path='/books/add' component={AddBook} />
+            <PrivateRoute path='/books/edit' component={EditBook} />
           </Switch>
         </div>
       </Router>

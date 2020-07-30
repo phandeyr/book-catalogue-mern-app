@@ -7,6 +7,8 @@ import { Role } from '../utils/roles'
 import { MdEdit, MdDelete } from 'react-icons/md'
 import Button from 'react-bootstrap/Button'
 import { Redirect } from 'react-router-dom'
+import Alert from 'react-bootstrap/Alert'
+import { Result } from '../utils/result'
 
 class BookList extends Component {
   constructor(props) {
@@ -16,7 +18,8 @@ class BookList extends Component {
       isTokenExpired: false,
       edit: false,
       delete: false,
-      books: []
+      books: [],
+      propState: props.location.state
     }
   }
 
@@ -24,6 +27,7 @@ class BookList extends Component {
     if (!LocalStorage.canRefreshToken()) {
       this.setState({ isTokenExpired: true })
     }
+    
     this.getBooks()
   }
 
@@ -61,6 +65,9 @@ class BookList extends Component {
         dataField: 'description',
         text: 'Description'
       }, {
+        dataField: 'author',
+        text: 'Author'
+      }, {
         dataField: 'actions',
         text: 'Actions',
         isDummyField: true,
@@ -77,6 +84,11 @@ class BookList extends Component {
     }]
   }
 
+  /**
+   * 
+   * @param {String} action determines action mode
+   * @param {String} id Id of the book selected in the row
+   */
   handleClick(action, id) {
     if (action === 'edit') {
       this.setState({ edit: true, id: id })
@@ -130,9 +142,14 @@ class BookList extends Component {
         </div>
       ) 
     }
-
     return (
-      <Fragment>
+      <div className='books'>
+        { this.state.propState ? 
+          (this.state.propState.result === Result.SUCCESS ? 
+            <Alert variant='success' onClose={() => this.setState({ propState : '' })} dismissible>{this.state.propState.msg}</Alert> :
+            <Alert variant='danger' onClose={() => this.setState({ propState : '' })} dismissible>{this.state.propState.msg}</Alert>)
+          : null
+        }
         <h3>Books</h3>
         <BootstrapTable
           keyField='_id' 
@@ -142,7 +159,7 @@ class BookList extends Component {
           hover
           noDataIndication='There are currently no books'
           pagination={ paginationFactory(this.getOptions()) } />
-      </Fragment>
+      </div>
     )
   }
 }

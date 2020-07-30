@@ -1,7 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import LocalStorage from '../utils/local_storage'
 import { Redirect } from 'react-router-dom'
-import Spinner from 'react-bootstrap/Spinner'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 
@@ -9,116 +7,73 @@ class Book extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      isLoading: true,
-      isTokenExpired: false,
-      cancel: false,
-      id: props.location.state.id,
-      isUpdated: false,
-      errMsg: ''
+      cancel: false
     }
-  }
-
-  componentDidMount() {
-    if (!LocalStorage.canRefreshToken()) {
-      this.setState({ isTokenExpired: true })
-    }
-    this.getBook()
   }
 
   /**
-   * Invokes API to retrieve book details - setting headers
+   * The props received from the EditBook Component
+   * Set the state accordingly
+   * @param {Object} nextProps 
    */
-  getBook() {
-    const headers = { 
-      'Content-Type': 'application/json',
-      'Authorization': `BEARER ${LocalStorage.getAccessToken()}`
-    }
+  componentWillReceiveProps(nextProps) {
+    const title = nextProps.title;
+    const description = nextProps.description
+    const author = nextProps.author
+    const action = nextProps.action
     
-    fetch(`/books/${this.state.id}`, { method: 'GET', headers: headers })
-    .then((res) => {
-      if (res.status !== 200) {
-        throw res
-      }
-      return res.json()
-    })
-    .then((data) => {
-      this.setState({
-        title: data.title,
-        description: data.description,
-        isLoading: false
-      })
-    })
-    .catch(console.log)
-  }
-
-  handleSubmit(e) {
-    e.preventDefault()
-    this.updateBook()
-  }
-
-  updateBook() {
-    const headers = { 
-      'Content-Type': 'application/json',
-      'Authorization': `BEARER ${LocalStorage.getAccessToken()}`
+    if (this.state.title !== title) {
+      this.setState({ title: title })
     }
 
-    const data = {
-      title: this.state.title,
-      description: this.state.description
+    if (this.state.description !== description) {
+      this.setState({ description: description })
     }
 
-    fetch(`/books/${this.state.id}`, { method: 'POST', headers: headers, body: JSON.stringify(data) })
-    .then((res) => {
-      if (res.status !== 200) {
-        throw res
-      }
-      return res.json()
-    })
-    .then(() => {
-      this.setState({ isUpdated: true })
-    })
-    .catch((err) => { 
-      this.setState({ errMsg: err.statusText }) 
-    })
+    if (this.state.author !== author) {
+      this.setState({ author: author })
+    }
+
+    if (this.state.action !== action) {
+      this.setState({ action: action })
+    }
   }
 
+  /**
+   * Update cancel state on click
+   */
   handleClick() {
     this.setState({ cancel: true })
   }
 
+  /**
+   * Handles form submission accordingly dependening on action
+   * @param {Event} e 
+   */
+  handleSubmit = (e) => {
+    e.preventDefault()
+    if (this.state.action === 'edit') {
+      this.props.handleSubmit(this.state.title, this.state.description, this.state.author, this.props.location.state.id)
+    } else {
+      this.props.handleSubmit(this.state.title, this.state.description, this.state.author)
+    }
+  } 
+
   render() {
-    if (this.state.isTokenExpired) {
-      return <Redirect to='/'/>
-    }
-
-    if (this.state.isLoading) {
-      return (
-        <div className='text-center'>
-          <Spinner animation='border' role='status'/>
-          <p>Loading...</p>           
-        </div>
-      ) 
-    }
-
     if (this.state.cancel) {
-      return <Redirect to='/books' />
-    }
-
-    if (this.state.isUpdated) {
       return <Redirect to='/books' />
     }
 
     return (
       <Fragment>
-        <h3>Edit Book</h3>
-        <Form onSubmit={e => this.handleSubmit(e)}>
+        <Form onSubmit={this.handleSubmit}>
           <Form.Group controlId='formGroupTitle'>
             <Form.Label>Title</Form.Label>
             <Form.Control 
               name='title'
               type='input'
               onChange={e => this.setState({ title: e.target.value })}
-              value={this.state.title} />
+              defaultValue={this.props.title} />
           </Form.Group>
           <Form.Group controlId='formGroupDescription'>
             <Form.Label>Description</Form.Label>
@@ -126,7 +81,15 @@ class Book extends Component {
               name='description'
               type='input'
               onChange={e => this.setState({ description: e.target.value })}
-              value={this.state.description} />
+              defaultValue={this.props.description} />
+          </Form.Group>
+          <Form.Group controlId='formGroupAuthor'>
+            <Form.Label>Author</Form.Label>
+            <Form.Control 
+              type='input'
+              name='author'
+              onChange={e => this.setState({ author: e.target.value })}
+              defaultValue={this.props.author} />
           </Form.Group>
           <Button onClick={this.handleClick.bind(this)}>Cancel</Button>
           <span>&nbsp;</span>

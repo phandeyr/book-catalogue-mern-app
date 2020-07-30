@@ -1,24 +1,19 @@
 const Book = require('../models/book_model')
-const Author = require('../models/author_model')
+const Author = require('../controllers/author_controller')
 
 /**
- * Creates and saves a book to the db.
- * Attempts to find the author by name, else creates it.
+ * Creates and saves a book to the db
  */
 exports.createBook = async (req, res) => {
   const { body } = req
   const { firstName, lastName } = req.body.author
   try {
-    let author = await Author.findOne({ firstName, lastName })
-    if (author == null) {
-      author = await new Author({ firstName, lastName }).save()
-    }
+    const id = await Author.createAuthor(firstName, lastName)
 
     const result = await new Book({
       title: body.title,
       description: body.description,
-      // eslint-disable-next-line no-underscore-dangle
-      author: author._id
+      author: id
     }).save()
 
     if (result) {
@@ -50,7 +45,16 @@ exports.getBookDetail = async (req, res) => {
   try {
     const book = await Book.findById(req.params.id)
     if (book) {
-      res.json(book)
+      const author = await Author.findAuthor(book.author)
+
+      res.status(200).json({
+        title: book.title,
+        description: book.description,
+        author: {
+          firstName: author.firstName,
+          lastName: author.lastName
+        }
+      })
     }
   } catch (err) {
     res.status(500).json({ message: 'Unable to retrieve book' })
@@ -62,7 +66,17 @@ exports.getBookDetail = async (req, res) => {
  */
 exports.updateBook = async (req, res) => {
   try {
-    const book = await Book.findByIdAndUpdate(req.params.id, req.body, { new: true })
+    const { title, description } = req.body
+    const { firstName, lastName } = req.body.author
+    const id = await Author.createAuthor(firstName, lastName)
+    
+    const data = {
+      title: title,
+      description: description,
+      author: id
+    }
+   
+    const book = await Book.findByIdAndUpdate(req.params.id, data, { new: true })
     if (book) {
       res.json(book)
     }
