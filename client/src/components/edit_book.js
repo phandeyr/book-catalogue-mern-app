@@ -8,7 +8,7 @@ class EditBook extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      action: 'edit'
+      isTokenExpired: false
     }
   }
 
@@ -16,10 +16,8 @@ class EditBook extends Component {
     if (!LocalStorage.canRefreshToken()) {
       this.setState({ isTokenExpired: true })
     }
-
-    if (this.state.action === 'edit') {
-      this.getBook()
-    }
+    
+    this.getBook()
   }
 
   /**

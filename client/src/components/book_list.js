@@ -9,6 +9,7 @@ import Button from 'react-bootstrap/Button'
 import { Redirect } from 'react-router-dom'
 import Alert from 'react-bootstrap/Alert'
 import { Result } from '../utils/result'
+import DeleteModal from '../components/delete_modal'
 
 class BookList extends Component {
   constructor(props) {
@@ -54,33 +55,36 @@ class BookList extends Component {
   }
 
   /**
-   * Columns to display in bootstrap table dependening on user role
+   * Returns the columns to display dependening on user role
    */
   getColumns() {
+    let columns = this.getStandardColumns()
+    
     if (LocalStorage.getUserRole() === Role.ADMIN_ROLE) {
-      return [{
-        dataField: 'title',
-        text: 'Title'
-      }, {
-        dataField: 'description',
-        text: 'Description'
-      }, {
-        dataField: 'author',
-        text: 'Author'
-      }, {
+      columns.push({
         dataField: 'actions',
         text: 'Actions',
         isDummyField: true,
         formatter: this.actionsFormatter
-      }]
+      })
     }
 
+    return columns
+  }
+
+  /**
+   * Returns the standard columns to display in bootstrap table
+   */
+  getStandardColumns() {
     return [{
       dataField: 'title',
       text: 'Title'
-    }, {
+      }, {
       dataField: 'description',
       text: 'Description'
+      }, {
+      dataField: 'author',
+      text: 'Author'
     }]
   }
 
@@ -95,10 +99,42 @@ class BookList extends Component {
     }
 
     if (action === 'delete') {
-      this.setState({ delete: true })
+      this.setState({ delete: true, modalShow: true, id: id })
     }
   }
+
+  /**
+   * Invokes API to delete the book
+   */
+  deleteBook = () => {
+    const headers = { 
+      'Content-Type': 'application/json',
+      'Authorization': `BEARER ${LocalStorage.getAccessToken()}`
+    }
+
+    fetch(`/books/${this.state.id}`, { method: 'DELETE', headers: headers })
+    .then((res) => {
+      console.log(res.status)
+      if (res.status !== 204) {
+        throw res
+      }
+      return res
+    })
+    .then(() => {
+      this.setState({
+        isDeleted: true,
+        modalShow: false
+      })
+      this.getBooks()
+    })
+    .catch(console.log)
+  }
   
+  /**
+   * Display actions in cell and handles onClick events
+   * @param {*} cell 
+   * @param {*} row 
+   */
   actionsFormatter = (cell, row) => {
     const id = row._id
     return (
@@ -130,10 +166,6 @@ class BookList extends Component {
       return <Redirect to={{pathname: '/books/edit', state: { id: this.state.id }}} />
     }
 
-    if (this.state.delete) {
-      // TO-DO: Delete confirmation modal
-    }
-
     if (this.state.isLoading) {
       return (
         <div className='text-center'>
@@ -150,6 +182,9 @@ class BookList extends Component {
             <Alert variant='danger' onClose={() => this.setState({ propState : '' })} dismissible>{this.state.propState.msg}</Alert>)
           : null
         }
+        { this.state.isDeleted ? <Alert variant='success' onClose={() => this.setState({ isDeleted: false })} dismissible>Book deleted successfully</Alert> : null }
+        {this.state.delete ? <DeleteModal show={this.state.modalShow} onHide={() => this.setState({ modalShow: false })} delete={this.deleteBook} /> : null }
+
         <h3>Books</h3>
         <BootstrapTable
           keyField='_id' 
