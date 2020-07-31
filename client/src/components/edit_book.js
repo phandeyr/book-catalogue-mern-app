@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom'
 import LocalStorage from '../utils/local_storage'
 import Book from './book'
 import { Result } from '../utils/result'
+import APIHelper from '../utils/api_helper'
 
 class EditBook extends Component {
   constructor(props) {
@@ -24,12 +25,7 @@ class EditBook extends Component {
    * Invokes API to retrieve book details - setting headers
    */
   getBook() {
-    const headers = { 
-      'Content-Type': 'application/json',
-      'Authorization': `BEARER ${LocalStorage.getAccessToken()}`
-    }
-    
-    fetch(`/books/${this.props.location.state.id}`, { method: 'GET', headers: headers })
+    fetch(`/books/${this.props.location.state.id}`, { method: 'GET', headers: APIHelper.getAPIHeaders(true) })
     .then((res) => {
       if (res.status !== 200) {
         throw res
@@ -55,11 +51,6 @@ class EditBook extends Component {
    * @param {String} id Id of book
    */
   handleSubmit(title, description, author, id) {
-    const headers = { 
-      'Content-Type': 'application/json',
-      'Authorization': `BEARER ${LocalStorage.getAccessToken()}`
-    }
-
     const name = author.split(' ')  
     const data = {
       title: title,
@@ -70,7 +61,7 @@ class EditBook extends Component {
       }
     }
   
-    fetch(`/books/${id}`, { method: 'POST', headers: headers, body: JSON.stringify(data) })
+    fetch(`/books/${id}`, { method: 'POST', headers: APIHelper.getAPIHeaders(true), body: JSON.stringify(data) })
     .then((res) => {
       if (res.status !== 200) {
         throw res

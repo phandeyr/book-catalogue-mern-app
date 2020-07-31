@@ -4,6 +4,7 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import LocalStorage from '../utils/local_storage'
 import Alert from 'react-bootstrap/Alert'
+import APIHelper from '../utils/api_helper'
 
 class LoginForm extends Component {
   constructor(props) {
@@ -26,14 +27,12 @@ class LoginForm extends Component {
   handleSubmit(e) {
     e.preventDefault()
 
-    const headers = { 'Content-Type': 'application/json' }
-
     const data = {
       email: this.state.email,
       password: this.state.password
     }
 
-    fetch('/auth/login', { method: 'POST', headers: headers, body: JSON.stringify(data) })
+    fetch('/auth/login', { method: 'POST', headers: APIHelper.getAPIHeaders(false), body: JSON.stringify(data) })
     .then((res) => {
       if (res.status !== 200) {
         throw res

@@ -10,6 +10,7 @@ import { Redirect } from 'react-router-dom'
 import Alert from 'react-bootstrap/Alert'
 import { Result } from '../utils/result'
 import DeleteModal from '../components/delete_modal'
+import APIHelper from '../utils/api_helper'
 
 class BookList extends Component {
   constructor(props) {
@@ -36,13 +37,11 @@ class BookList extends Component {
    * Invokes API to retrieve all books - setting headers
    */
   getBooks() {
-    const headers = { 
-      'Content-Type': 'application/json',
-      'Authorization': `BEARER ${LocalStorage.getAccessToken()}`
-    }
-    
-    fetch('/books', { method: 'GET', headers: headers })
+    fetch('/books', { method: 'GET', headers: APIHelper.getAPIHeaders(true) })
     .then((res) => {
+      if (res.status !== 200) {
+        throw res
+      }
       return res.json()
     })
     .then((data) => {
@@ -107,12 +106,7 @@ class BookList extends Component {
    * Invokes API to delete the book
    */
   deleteBook = () => {
-    const headers = { 
-      'Content-Type': 'application/json',
-      'Authorization': `BEARER ${LocalStorage.getAccessToken()}`
-    }
-
-    fetch(`/books/${this.state.id}`, { method: 'DELETE', headers: headers })
+    fetch(`/books/${this.state.id}`, { method: 'DELETE', headers: APIHelper.getAPIHeaders(true) })
     .then((res) => {
       console.log(res.status)
       if (res.status !== 204) {

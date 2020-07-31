@@ -3,8 +3,12 @@ import LocalStorage from '../utils/local_storage'
 import Book from './book'
 import { Redirect } from 'react-router-dom'
 import { Result } from '../utils/result'
+import APIHelper from '../utils/api_helper'
 
 class AddBook extends Component {
+  constructor(props) {
+    super(props)
+  }
 
   componentDidMount() {
     if (!LocalStorage.canRefreshToken()) {
@@ -13,11 +17,6 @@ class AddBook extends Component {
   }
 
   handleSubmit(title, description, author) {
-    const headers = { 
-      'Content-Type': 'application/json',
-      'Authorization': `BEARER ${LocalStorage.getAccessToken()}`
-    }
-
     const name = author.split(' ')
     const data = {
       title: title,
@@ -28,7 +27,7 @@ class AddBook extends Component {
       }
     }
   
-    fetch('/books', { method: 'POST', headers: headers, body: JSON.stringify(data) })
+    fetch('/books', { method: 'POST', headers: APIHelper.getAPIHeaders(true), body: JSON.stringify(data) })
     .then((res) => {
       if (res.status !== 201) {
         throw res
