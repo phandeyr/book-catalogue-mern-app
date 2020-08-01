@@ -9,11 +9,11 @@ import ModalFooter from 'react-bootstrap/ModalFooter'
 const DeleteModal = (props) => {
 	return (
 		<Modal
-			{...props}
+			show={props.show}
+			onHide={props.onHide}
 			size='lg'
 			aria-labelledby='contained-modal-title-vcenter'
-			centered 
-			fade={false}>
+			centered >
 			
 			<ModalHeader closeButton>
 				<ModalTitle id='contained-modal-title-vcenter'>

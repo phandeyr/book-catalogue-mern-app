@@ -29,9 +29,23 @@ exports.createBook = async (req, res) => {
  */
 exports.getBooks = async (req, res) => {
   try {
+    let response = []
     const books = await Book.find()
     if (books) {
-      res.json(books)
+      for await (const book of books) {
+        let authorName = {}
+        const author = await Author.findAuthor(book.author)
+        
+        if (author !== null) {
+          authorName['firstName'] = author.firstName
+          authorName['lastName'] = author.lastName
+        }
+
+        const output = { _id: book._id, title: book.title, description: book.description, author: authorName }
+        response.push(output)
+      }
+    
+      res.json(response)
     }
   } catch (err) {
     res.status(500).json({ message: 'Unable to retrieve all books' })

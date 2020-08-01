@@ -83,7 +83,8 @@ class BookList extends Component {
       text: 'Description'
       }, {
       dataField: 'author',
-      text: 'Author'
+      text: 'Author',
+      formatter: this.authorNameFormatter
     }]
   }
 
@@ -124,6 +125,15 @@ class BookList extends Component {
     .catch(console.log)
   }
   
+  /**
+   * Returns the author's first and last name
+   * @param {*} cell 
+   * @param {*} row 
+   */
+  authorNameFormatter = (cell, row) => {
+    return `${cell.firstName} ${cell.lastName}`
+  }
+
   /**
    * Display actions in cell and handles onClick events
    * @param {*} cell 
