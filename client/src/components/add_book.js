@@ -63,8 +63,11 @@ class AddBook extends Component {
 
     return(
       <Fragment>
-        <h3>Add Book</h3>
-        <Book {...this.props} handleSubmit={this.handleSubmit} handleState={this.handleState}/>
+        <Book 
+          {...this.props} 
+          handleSubmit={this.handleSubmit} 
+          handleState={this.handleState}
+          formTitle='Add Book'/>
       </Fragment>
     )
   }

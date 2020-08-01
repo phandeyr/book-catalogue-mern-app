@@ -101,7 +101,6 @@ class EditBook extends Component {
 
     return(
       <Fragment>
-        <h3>Edit Book</h3>
         <Book 
           {...this.props} 
           handleSubmit={this.handleSubmit} 
@@ -109,6 +108,7 @@ class EditBook extends Component {
           title={this.state.title} 
           description={this.state.description} 
           author={this.state.author}
+          formTitle='Edit Book'
           action='edit'/>
       </Fragment>
     )

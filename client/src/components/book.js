@@ -66,7 +66,9 @@ class Book extends Component {
 
     return (
       <Fragment>
-        <Form onSubmit={this.handleSubmit}>
+        <Form className='book' onSubmit={this.handleSubmit}>
+          <h3>{this.props.formTitle}</h3>
+          <hr/>
           <Form.Group controlId='formGroupTitle'>
             <Form.Label>Title</Form.Label>
             <Form.Control 

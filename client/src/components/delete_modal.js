@@ -17,11 +17,11 @@ const DeleteModal = (props) => {
 			
 			<ModalHeader closeButton>
 				<ModalTitle id='contained-modal-title-vcenter'>
-					Delete Record
+					Delete Book
 				</ModalTitle>
 			</ModalHeader>
 			<ModalBody>
-				<p>Are you sure you want to delete this record?</p>
+				<p>Are you sure you want to delete this book?</p>
 			</ModalBody>
 			<ModalFooter>
 				<Button onClick={props.onHide}>Cancel</Button>

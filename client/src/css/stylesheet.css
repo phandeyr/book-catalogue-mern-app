@@ -36,3 +36,14 @@ form.login.btn-primary {
 .books {
     padding-top: 15px;
 }
+
+.modal-title, .modal-body {
+    text-align: center!important;
+    width: 100%!important;
+}
+
+form.book {
+    border: 1px solid;
+    padding: 15px;
+    border-radius: 15px;
+}
