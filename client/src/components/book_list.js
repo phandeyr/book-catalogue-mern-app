@@ -21,7 +21,8 @@ class BookList extends Component {
       edit: false,
       delete: false,
       books: [],
-      propState: props.location.state
+      alertMsg: '',
+      showAlert: false
     }
   }
 
@@ -30,7 +31,18 @@ class BookList extends Component {
       this.setState({ isTokenExpired: true })
     }
     
+    if (this.props.location.state) {
+      this.setState({ 
+        showAlert: true,
+        alertMsg: this.props.location.state.msg
+      })
+    }
+
     this.getBooks()
+  }
+
+  componentDidUpdate() {
+    setTimeout(() => this.setState({ showAlert: false, alertMsg: '' }), 3000)
   }
 
   /**
@@ -50,7 +62,9 @@ class BookList extends Component {
         isLoading: false
       })
     })
-    .catch(console.log)
+    .catch((err) => {
+      console.log(err)
+    })
   }
 
   /**
@@ -99,8 +113,22 @@ class BookList extends Component {
     }
 
     if (action === 'delete') {
-      this.setState({ delete: true, modalShow: true, id: id })
+      this.setState({ 
+        delete: true, 
+        modalShow: true, 
+        id: id
+      })
     }
+  }
+
+  /**
+   * Updates state to not display the alert
+   */
+  closeAlert = () => {
+    this.setState({ 
+      showAlert: false,
+      alertMsg: '' 
+    })
   }
 
   /**
@@ -109,7 +137,6 @@ class BookList extends Component {
   deleteBook = () => {
     fetch(`/books/${this.state.id}`, { method: 'DELETE', headers: APIHelper.getAPIHeaders(true) })
     .then((res) => {
-      console.log(res.status)
       if (res.status !== 204) {
         throw res
       }
@@ -117,12 +144,13 @@ class BookList extends Component {
     })
     .then(() => {
       this.setState({
-        isDeleted: true,
-        modalShow: false
+        showAlert: true,
+        modalShow: false,
+        alertMsg: 'Book deleted successfully'
       })
       this.getBooks()
     })
-    .catch(console.log)
+    .catch((err) => console.log(err))
   }
   
   /**
@@ -180,13 +208,15 @@ class BookList extends Component {
     }
     return (
       <div className='books'>
-        { this.state.propState ? 
-          (this.state.propState.result === Result.SUCCESS ? 
-            <Alert variant='success' onClose={() => this.setState({ propState : '' })} dismissible>{this.state.propState.msg}</Alert> :
-            <Alert variant='danger' onClose={() => this.setState({ propState : '' })} dismissible>{this.state.propState.msg}</Alert>)
-          : null
+        { this.state.showAlert ?
+          (this.state.propState ? 
+            (this.state.propState.result === Result.SUCCESS ? 
+              <Alert variant='success' onClose={this.closeAlert} dismissible>{this.state.alertMsg}</Alert> :
+              <Alert variant='danger' onClose={this.closeAlert} dismissible>{this.state.alertMsg}</Alert>)
+            : <Alert variant='success' onClose={this.closeAlert} dismissible>{this.state.alertMsg}</Alert>
+          ) : null
         }
-        { this.state.isDeleted ? <Alert variant='success' onClose={() => this.setState({ isDeleted: false })} dismissible>Book deleted successfully</Alert> : null }
+
         {this.state.delete ? <DeleteModal show={this.state.modalShow} onHide={() => this.setState({ modalShow: false })} delete={this.deleteBook} /> : null }
 
         <h3>Books</h3>
