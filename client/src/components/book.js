@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { Redirect } from 'react-router-dom'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
+import Col from 'react-bootstrap/Col'
 
 class Book extends Component {
   constructor(props) {
@@ -19,7 +20,8 @@ class Book extends Component {
   componentWillReceiveProps(nextProps) {
     const title = nextProps.title;
     const description = nextProps.description
-    const author = nextProps.author
+    const firstName = nextProps.firstName
+    const lastName = nextProps.lastName
     const action = nextProps.action
     
     if (this.state.title !== title) {
@@ -30,8 +32,12 @@ class Book extends Component {
       this.setState({ description: description })
     }
 
-    if (this.state.author !== author) {
-      this.setState({ author: author })
+    if (this.state.firstName !== firstName) {
+      this.setState({ firstName: firstName })
+    }
+
+    if (this.state.lastName !== lastName) {
+      this.setState({ lastName: lastName })
     }
 
     if (this.state.action !== action) {
@@ -53,9 +59,9 @@ class Book extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     if (this.state.action === 'edit') {
-      this.props.handleSubmit(this.state.title, this.state.description, this.state.author, this.props.location.state.id)
+      this.props.handleSubmit(this.state.title, this.state.description, this.state.firstName, this.state.lastName, this.props.location.state.id)
     } else {
-      this.props.handleSubmit(this.state.title, this.state.description, this.state.author)
+      this.props.handleSubmit(this.state.title, this.state.description, this.state.firstName, this.state.lastName)
     }
   } 
 
@@ -72,6 +78,7 @@ class Book extends Component {
           <Form.Group controlId='formGroupTitle'>
             <Form.Label>Title</Form.Label>
             <Form.Control 
+              required
               name='title'
               type='input'
               onChange={e => this.setState({ title: e.target.value })}
@@ -86,16 +93,33 @@ class Book extends Component {
               defaultValue={this.props.description} />
           </Form.Group>
           <Form.Group controlId='formGroupAuthor'>
-            <Form.Label>Author</Form.Label>
-            <Form.Control 
-              type='input'
-              name='author'
-              onChange={e => this.setState({ author: e.target.value })}
-              defaultValue={this.props.author} />
+            <h5>Author</h5>
+            <Form.Row>
+              <Form.Group as={Col} controlId='formGridFirstName'>
+                <Form.Label>First Name</Form.Label>
+                <Form.Control
+                  required  
+                  name='firstName'
+                  type='input' 
+                  onChange={e => this.setState({ firstName: e.target.value })}
+                  defaultValue={this.props.firstName}/>
+              </Form.Group>
+              <Form.Group as={Col} controlId='formGridLastName'>
+                <Form.Label>Last Name</Form.Label>
+                <Form.Control
+                  required
+                  name='lastName'
+                  type='input'
+                  onChange={e => this.setState({ lastName: e.target.value })}
+                  defaultValue={this.props.lastName}/>
+              </Form.Group>
+            </Form.Row>
           </Form.Group>
-          <Button onClick={this.handleClick.bind(this)}>Cancel</Button>
-          <span>&nbsp;</span>
-          <Button type='submit'>Save</Button>
+          <div className='book_btn'>
+            <Button onClick={this.handleClick.bind(this)}>Cancel</Button>
+            <span>&nbsp;</span>
+            <Button type='submit'>Save</Button>
+          </div>
         </Form>
       </Fragment>
     )

@@ -36,7 +36,8 @@ class EditBook extends Component {
       this.setState({
         title: data.title,
         description: data.description,
-        author: data.author.firstName + ' ' + data.author.lastName,
+        firstName: data.author.firstName,
+        lastName: data.author.lastName,
         isLoading: false,
       })
     })
@@ -50,14 +51,13 @@ class EditBook extends Component {
    * @param {String} author Author of book
    * @param {String} id Id of book
    */
-  handleSubmit(title, description, author, id) {
-    const name = author.split(' ')  
+  handleSubmit(title, description, firstName, lastName, id) {
     const data = {
       title: title,
       description: description,
       author: {
-        firstName: name[0],
-        lastName: name[1]
+        firstName: firstName,
+        lastName: lastName
       }
     }
   
@@ -107,7 +107,8 @@ class EditBook extends Component {
           handleState={this.handleState} 
           title={this.state.title} 
           description={this.state.description} 
-          author={this.state.author}
+          firstName={this.state.firstName}
+          lastName={this.state.lastName}
           formTitle='Edit Book'
           action='edit'/>
       </Fragment>

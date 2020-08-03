@@ -46,4 +46,11 @@ form.book {
     border: 1px solid;
     padding: 15px;
     border-radius: 15px;
+    margin: auto;
+    width: 50%;
+    overflow: hidden;
+}
+
+.book_btn {
+    float:right;
 }

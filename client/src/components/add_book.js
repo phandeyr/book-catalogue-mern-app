@@ -16,14 +16,13 @@ class AddBook extends Component {
     }
   }
 
-  handleSubmit(title, description, author) {
-    const name = author.split(' ')
+  handleSubmit(title, description, firstName, lastName) {
     const data = {
       title: title,
       description: description,
       author: {
-        firstName: name[0],
-        lastName: name[1]
+        firstName: firstName,
+        lastName: lastName
       }
     }
   
