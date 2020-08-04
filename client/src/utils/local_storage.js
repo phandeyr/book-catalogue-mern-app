@@ -23,8 +23,12 @@ const isAuthenticated = () => {
 }
 
 const getUserRole = () => {
-  const decoded = jwt_decode(getAccessToken())
-  return decoded.role
+  try {
+    const decoded = jwt_decode(getAccessToken())
+    return decoded.role
+  } catch (err) {
+    clearToken()
+  }
 }
 
 const clearToken = () => {

@@ -11,10 +11,12 @@ import Alert from 'react-bootstrap/Alert'
 import { Result } from '../utils/result'
 import DeleteModal from '../components/delete_modal'
 import APIHelper from '../utils/api_helper'
+import AuthContext from '../context/auth_context'
 
 class BookList extends Component {
   constructor(props) {
     super(props)
+    
     this.state = {
       isLoading: true,
       isTokenExpired: false,
@@ -29,6 +31,8 @@ class BookList extends Component {
   componentDidMount() {
     if (!LocalStorage.canRefreshToken()) {
       this.setState({ isTokenExpired: true })
+    } else {
+      this.getBooks()
     }
     
     if (this.props.location.state) {
@@ -37,8 +41,6 @@ class BookList extends Component {
         alertMsg: this.props.location.state.msg
       })
     }
-
-    this.getBooks()
   }
 
   componentDidUpdate() {
@@ -191,7 +193,14 @@ class BookList extends Component {
 
   render() {
     if (this.state.isTokenExpired) {
-      return <Redirect to='/'/>
+      return (
+        <AuthContext.Consumer>
+          {({ setAuthentication }) => {
+            setAuthentication(LocalStorage.isAuthenticated())
+            return <Redirect to='/' />
+          }}
+        </AuthContext.Consumer>
+      )
     }
 
     if (this.state.edit) {

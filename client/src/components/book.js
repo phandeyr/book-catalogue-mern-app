@@ -18,7 +18,7 @@ class Book extends Component {
    * @param {Object} nextProps 
    */
   componentWillReceiveProps(nextProps) {
-    const title = nextProps.title;
+    const title = nextProps.title
     const description = nextProps.description
     const firstName = nextProps.firstName
     const lastName = nextProps.lastName

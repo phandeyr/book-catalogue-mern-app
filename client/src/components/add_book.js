@@ -4,10 +4,14 @@ import Book from './book'
 import { Redirect } from 'react-router-dom'
 import { Result } from '../utils/result'
 import APIHelper from '../utils/api_helper'
+import AuthContext from '../context/auth_context'
 
 class AddBook extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      isTokenExpired: false
+    }
   }
 
   componentDidMount() {
@@ -56,7 +60,18 @@ class AddBook extends Component {
   }
 
   render() {
-    if (this.state) {
+    if (this.state.isTokenExpired) {
+      return (
+        <AuthContext.Consumer>
+          {({ setAuthentication }) => {
+            setAuthentication(LocalStorage.isAuthenticated())
+            return <Redirect to='/' />
+          }}
+        </AuthContext.Consumer>
+      )
+    }
+
+    if (this.state.msg) {
       return <Redirect to={{ pathname: '/books', state: { result: this.state.result, msg: this.state.msg }} } />
     }
 

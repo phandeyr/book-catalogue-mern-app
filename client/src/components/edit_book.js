@@ -4,6 +4,7 @@ import LocalStorage from '../utils/local_storage'
 import Book from './book'
 import { Result } from '../utils/result'
 import APIHelper from '../utils/api_helper'
+import AuthContext from '../context/auth_context'
 
 class EditBook extends Component {
   constructor(props) {
@@ -38,7 +39,7 @@ class EditBook extends Component {
         description: data.description,
         firstName: data.author.firstName,
         lastName: data.author.lastName,
-        isLoading: false,
+        isLoading: false
       })
     })
     .catch(console.log)
@@ -92,7 +93,14 @@ class EditBook extends Component {
 
   render() {
     if (this.state.isTokenExpired) {
-      return <Redirect to='/'/>
+      return (
+        <AuthContext.Consumer>
+          {({ setAuthentication }) => {
+            setAuthentication(LocalStorage.isAuthenticated())
+            return <Redirect to='/' />
+          }}
+        </AuthContext.Consumer>
+      )
     }
 
     if (this.state.msg) {

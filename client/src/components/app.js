@@ -7,33 +7,36 @@ import EditBook from './edit_book'
 import AddBook from './add_book'
 import PrivateRoute from './private_route'
 import LocalStorage from '../utils/local_storage'
+import AuthContext from '../context/auth_context'
 
 class App extends Component {
   constructor(props) {
     super(props)
-    this.state = { isAuthenticated: LocalStorage.isAuthenticated() }
-    this.handleState = this.handleState.bind(this)
+    this.state = {
+      isAuthenticated: LocalStorage.isAuthenticated(),
+      setAuthentication: this.setAuthentication
+    }
   }
 
-  handleState(auth) {
-    this.setState({
-      isAuthenticated: auth
-    })
+  setAuthentication = (auth) => {
+    this.setState({ isAuthenticated: auth})
   }
 
   render() {
     return (
-      <Router>
-        <Navigation auth={this.state.isAuthenticated}/>
+      <AuthContext.Provider value={this.state}>
+        <Router>
+        <Navigation />
         <div className='container'>
           <Switch>
-            <Route exact path='/' component={() => <LoginForm handleState={this.handleState} />}  />
+            <Route exact path='/' component={LoginForm} />
             <PrivateRoute exact path='/books' component={BookList} />
             <PrivateRoute path='/books/add' component={AddBook} />
             <PrivateRoute path='/books/edit' component={EditBook} />
           </Switch>
         </div>
-      </Router>
+        </Router>
+      </AuthContext.Provider>
     )
   }
 }
