@@ -1,10 +1,11 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import LocalStorage from '../utils/local_storage'
 import Book from './book'
 import { Redirect } from 'react-router-dom'
 import { Result } from '../utils/result'
 import APIHelper from '../utils/api_helper'
 import AuthContext from '../context/auth_context'
+import Alert from 'react-bootstrap/Alert'
 
 class AddBook extends Component {
   constructor(props) {
@@ -15,7 +16,13 @@ class AddBook extends Component {
   }
 
   componentDidMount() {
-    if (!LocalStorage.canRefreshToken()) {
+    const canRefreshToken = LocalStorage.canRefreshToken()
+    if (typeof canRefreshToken === 'string') {
+      this.setState({ 
+        showExpiryAlert: true,
+        expiryAlertMsg: 'You will be logged out soon due to security reasons'
+      })
+    } else if (!canRefreshToken) {
       this.setState({ isTokenExpired: true })
     }
   }
@@ -76,16 +83,16 @@ class AddBook extends Component {
     }
 
     return(
-      <Fragment>
+      <div className='books'>
+        { this.state.showExpiryAlert ? <Alert variant='warning'>{this.state.expiryAlertMsg}</Alert> : null }
         <Book 
           {...this.props} 
           handleSubmit={this.handleSubmit} 
           handleState={this.handleState}
           formTitle='Add Book'/>
-      </Fragment>
+      </div>
     )
   }
-
 }
 
 export default AddBook
