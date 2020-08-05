@@ -1,3 +1,5 @@
+import APIHelper from '../utils/api_helper'
+
 const jwt_decode = require('jwt-decode')
 
 const setToken = (token) => {
@@ -44,20 +46,20 @@ const canRefreshToken = () => {
 
   // Refresh the token if it's going to expire within two minutes and it's not reaching the expiration limit of 1 hour
   if (exp - (Date.now()/1000) <= 120 && (Date.now()/1000) - iat <= 3480) {
-    const headers = { 'Content-Type': 'application/json' }
-
     const data = {
       token: getRefreshToken()
     }
 
-    fetch('/auth/token', { method: 'POST', headers: headers, body: JSON.stringify(data) })
+    fetch('/auth/token', { method: 'POST', headers: APIHelper.getAPIHeaders(false), body: JSON.stringify(data) })
     .then((res) => {
       return res.json()
     })
     .then((data) => {
       setToken(data)
     })
-    .catch(console.log)
+    .catch((err) => { return false })
+  } else if (exp - (Date.now()/1000) <= 120 && exp - (Date.now()/1000) > 0 && (Date.now()/1000) - iat > 3480) {
+    return 'token reaching expiry'
   } else if ((Date.now()/1000) >= exp) {
     clearToken()
     return false

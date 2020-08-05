@@ -29,7 +29,14 @@ class BookList extends Component {
   }
 
   componentDidMount() {
-    if (!LocalStorage.canRefreshToken()) {
+    const canRefreshToken = LocalStorage.canRefreshToken()
+    if (typeof canRefreshToken === 'string') {
+      this.setState({ 
+        showExpiryAlert: true,
+        expiryAlertMsg: 'You will be logged out soon due to security reasons'
+      })
+      this.getBooks()
+    } else if (!canRefreshToken) {
       this.setState({ isTokenExpired: true })
     } else {
       this.getBooks()
@@ -44,7 +51,7 @@ class BookList extends Component {
   }
 
   componentDidUpdate() {
-    setTimeout(() => this.setState({ showAlert: false, alertMsg: '' }), 3000)
+    setTimeout(() => this.closeAlert(), 3000)
   }
 
   /**
@@ -223,7 +230,11 @@ class BookList extends Component {
               <Alert variant='success' onClose={this.closeAlert} dismissible>{this.state.alertMsg}</Alert> :
               <Alert variant='danger' onClose={this.closeAlert} dismissible>{this.state.alertMsg}</Alert>)
             : <Alert variant='success' onClose={this.closeAlert} dismissible>{this.state.alertMsg}</Alert>
-          ) : null
+          ) : 
+          (this.state.showExpiryAlert ?
+              <Alert variant='warning'>{this.state.expiryAlertMsg}</Alert>
+            : null
+          )
         }
 
         {this.state.delete ? <DeleteModal show={this.state.modalShow} onHide={() => this.setState({ modalShow: false })} delete={this.deleteBook} /> : null }
