@@ -6,7 +6,7 @@ import Spinner from 'react-bootstrap/Spinner'
 import { Role } from '../utils/roles'
 import { MdEdit, MdDelete } from 'react-icons/md'
 import Button from 'react-bootstrap/Button'
-import { Redirect } from 'react-router-dom'
+import { Redirect, withRouter } from 'react-router-dom'
 import Alert from 'react-bootstrap/Alert'
 import { Result } from '../utils/result'
 import DeleteModal from '../components/delete_modal'
@@ -46,6 +46,7 @@ class BookList extends Component {
         showAlert: true,
         alertMsg: this.props.location.state.msg
       })
+      this.props.history.replace('/books')
     }
     this.setTimer()
   }
@@ -262,4 +263,4 @@ class BookList extends Component {
   }
 }
 
-export default BookList
+export default withRouter(BookList)
