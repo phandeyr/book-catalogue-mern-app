@@ -13,43 +13,43 @@ class Book extends Component {
   }
 
   /**
-   * The props received from the EditBook Component
-   * Set the state accordingly
-   * @param {Object} nextProps 
-   */
-  componentWillReceiveProps(nextProps) {
-    const title = nextProps.title
-    const description = nextProps.description
-    const firstName = nextProps.firstName
-    const lastName = nextProps.lastName
-    const action = nextProps.action
-    
-    if (this.state.title !== title) {
-      this.setState({ title: title })
-    }
-
-    if (this.state.description !== description) {
-      this.setState({ description: description })
-    }
-
-    if (this.state.firstName !== firstName) {
-      this.setState({ firstName: firstName })
-    }
-
-    if (this.state.lastName !== lastName) {
-      this.setState({ lastName: lastName })
-    }
-
-    if (this.state.action !== action) {
-      this.setState({ action: action })
-    }
-  }
-
-  /**
    * Update cancel state on click
    */
   handleClick() {
     this.setState({ cancel: true })
+  }
+
+  /**
+   * Sets the state from props, unless it's been updated
+   * @param {Object} props 
+   * @param {Object} state 
+   */
+  static getDerivedStateFromProps(props, state) {
+    let update = {}
+
+    update.title = props.title
+    update.description = props.description
+    update.firstName = props.firstName
+    update.lastName = props.lastName
+    update.action = props.action
+
+    if (state.title !== undefined) {
+      update.title = state.title
+    } 
+
+    if (state.description !== undefined) {
+      update.description = state.description
+    }
+
+    if (state.firstName !== undefined) {
+      update.firstName = state.firstName
+    }
+
+    if (state.lastName !== undefined) {
+      update.lastName = state.lastName
+    }
+
+    return update
   }
 
   /**
