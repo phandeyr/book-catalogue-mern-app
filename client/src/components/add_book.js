@@ -4,7 +4,6 @@ import Book from './book'
 import { Redirect } from 'react-router-dom'
 import { Result } from '../utils/result'
 import APIHelper from '../utils/api_helper'
-import AuthContext from '../context/auth_context'
 import Alert from 'react-bootstrap/Alert'
 
 class AddBook extends Component {
@@ -68,14 +67,7 @@ class AddBook extends Component {
 
   render() {
     if (this.state.isTokenExpired) {
-      return (
-        <AuthContext.Consumer>
-          {({ setAuthentication }) => {
-            setAuthentication(LocalStorage.isAuthenticated())
-            return <Redirect to='/' />
-          }}
-        </AuthContext.Consumer>
-      )
+      return <Redirect to='/' />
     }
 
     if (this.state.msg) {

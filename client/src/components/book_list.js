@@ -11,7 +11,6 @@ import Alert from 'react-bootstrap/Alert'
 import { Result } from '../utils/result'
 import DeleteModal from '../components/delete_modal'
 import APIHelper from '../utils/api_helper'
-import AuthContext from '../context/auth_context'
 
 class BookList extends Component {
   constructor(props) {
@@ -48,10 +47,27 @@ class BookList extends Component {
         alertMsg: this.props.location.state.msg
       })
     }
+    this.setTimer()
   }
 
-  componentDidUpdate() {
-    setTimeout(() => this.closeAlert(), 3000)
+  componentWillUnmount() {
+    this.clearTimer()
+  }
+
+  /**
+   * Sets timeout to close alert
+   */
+  setTimer = () => {
+    this.timer = setTimeout(() => this.closeAlert(), 3000)
+  }
+
+  /**
+   * Clears the timeout if it exists
+   */
+  clearTimer = () => {
+    if (this.timer) {
+      clearTimeout(this.timer)
+    }
   }
 
   /**
@@ -200,14 +216,7 @@ class BookList extends Component {
 
   render() {
     if (this.state.isTokenExpired) {
-      return (
-        <AuthContext.Consumer>
-          {({ setAuthentication }) => {
-            setAuthentication(LocalStorage.isAuthenticated())
-            return <Redirect to='/' />
-          }}
-        </AuthContext.Consumer>
-      )
+      return <Redirect to='/books' />
     }
 
     if (this.state.edit) {

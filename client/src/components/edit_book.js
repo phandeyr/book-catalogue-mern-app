@@ -4,7 +4,6 @@ import LocalStorage from '../utils/local_storage'
 import Book from './book'
 import { Result } from '../utils/result'
 import APIHelper from '../utils/api_helper'
-import AuthContext from '../context/auth_context'
 import Alert from 'react-bootstrap/Alert'
 
 class EditBook extends Component {
@@ -101,14 +100,7 @@ class EditBook extends Component {
 
   render() {
     if (this.state.isTokenExpired) {
-      return (
-        <AuthContext.Consumer>
-          {({ setAuthentication }) => {
-            setAuthentication(LocalStorage.isAuthenticated())
-            return <Redirect to='/' />
-          }}
-        </AuthContext.Consumer>
-      )
+      return <Redirect to='/' />
     }
 
     if (this.state.msg) {

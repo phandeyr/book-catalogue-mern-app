@@ -5,12 +5,11 @@ import Button from 'react-bootstrap/Button'
 import LocalStorage from '../utils/local_storage'
 import Alert from 'react-bootstrap/Alert'
 import APIHelper from '../utils/api_helper'
-import AuthContext from '../context/auth_context'
+import { withContext, handleState } from '../context/auth_context'
 
 class LoginForm extends Component {
   constructor(props) {
     super(props)
-    
     this.state = {
       email: '',
       password: '',
@@ -42,6 +41,7 @@ class LoginForm extends Component {
     })
     .then((data) => {
       LocalStorage.setToken(data)
+      handleState(this.props, true)
       this.setState({ logged_in: true })
     })
     .catch((err) => {
@@ -54,14 +54,7 @@ class LoginForm extends Component {
 
   render() {
     if (this.state.logged_in) {
-      return (
-        <AuthContext.Consumer>
-          {({ setAuthentication }) => {
-            setAuthentication(LocalStorage.isAuthenticated())
-            return <Redirect to='/books' />
-          }}
-        </AuthContext.Consumer>
-      )
+      return <Redirect to='/books' />
     }
 
     return (
@@ -92,4 +85,4 @@ class LoginForm extends Component {
   }
 }
 
-export default LoginForm
+export default withContext(LoginForm)
