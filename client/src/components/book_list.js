@@ -48,6 +48,9 @@ class BookList extends Component {
       })
       this.props.history.replace('/books')
     }
+  }
+
+  componentDidUpdate() {
     this.setTimer()
   }
 
@@ -169,12 +172,12 @@ class BookList extends Component {
       return res
     })
     .then(() => {
-      this.setState({
+      this.setState(prevState => ({
+        books: prevState.books.filter(book => book._id !== this.state.id),
         showAlert: true,
         modalShow: false,
         alertMsg: 'Book deleted successfully'
-      })
-      this.getBooks()
+      }))
     })
     .catch((err) => console.log(err))
   }
