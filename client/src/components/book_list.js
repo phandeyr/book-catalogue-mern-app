@@ -11,6 +11,7 @@ import Alert from 'react-bootstrap/Alert'
 import { Result } from '../utils/result'
 import DeleteModal from '../components/delete_modal'
 import APIHelper from '../utils/api_helper'
+import { withContext, handleState } from '../context/auth_context'
 
 class BookList extends Component {
   constructor(props) {
@@ -36,6 +37,7 @@ class BookList extends Component {
       })
       this.getBooks()
     } else if (!canRefreshToken) {
+      handleState(this.props, false)
       this.setState({ isTokenExpired: true })
     } else {
       this.getBooks()
@@ -51,7 +53,9 @@ class BookList extends Component {
   }
 
   componentDidUpdate() {
-    this.setTimer()
+    if (this.state.showAlert) {
+      this.setTimer()
+    }
   }
 
   componentWillUnmount() {
@@ -266,4 +270,4 @@ class BookList extends Component {
   }
 }
 
-export default withRouter(BookList)
+export default withRouter(withContext(BookList))

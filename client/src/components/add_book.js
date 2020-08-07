@@ -5,6 +5,7 @@ import { Redirect } from 'react-router-dom'
 import { Result } from '../utils/result'
 import APIHelper from '../utils/api_helper'
 import Alert from 'react-bootstrap/Alert'
+import { withContext, handleState } from '../context/auth_context'
 
 class AddBook extends Component {
   constructor(props) {
@@ -22,6 +23,7 @@ class AddBook extends Component {
         expiryAlertMsg: 'You will be logged out soon due to security reasons'
       })
     } else if (!canRefreshToken) {
+      handleState(this.props, false)
       this.setState({ isTokenExpired: true })
     }
   }
@@ -87,4 +89,4 @@ class AddBook extends Component {
   }
 }
 
-export default AddBook
+export default withContext(AddBook)

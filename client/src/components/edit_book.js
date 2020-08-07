@@ -5,6 +5,7 @@ import Book from './book'
 import { Result } from '../utils/result'
 import APIHelper from '../utils/api_helper'
 import Alert from 'react-bootstrap/Alert'
+import { withContext, handleState } from '../context/auth_context'
 
 class EditBook extends Component {
   constructor(props) {
@@ -23,6 +24,7 @@ class EditBook extends Component {
       })
       this.getBook()
     } else if (!canRefreshToken) {
+      handleState(this.props, false)
       this.setState({ isTokenExpired: true })
     }
     
@@ -125,4 +127,4 @@ class EditBook extends Component {
   }
 }
 
-export default EditBook
+export default withContext(EditBook)
