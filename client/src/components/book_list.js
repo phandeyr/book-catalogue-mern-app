@@ -24,16 +24,16 @@ class BookList extends Component {
       delete: false,
       books: [],
       alertMsg: '',
-      showAlert: false
+      showAlert: false,
     }
   }
 
-  componentDidMount() {
-    const canRefreshToken = LocalStorage.canRefreshToken()
+  async componentDidMount() {
+    const canRefreshToken = await LocalStorage.canRefreshToken()
     if (typeof canRefreshToken === 'string') {
       this.setState({ 
         showExpiryAlert: true,
-        expiryAlertMsg: 'You will be logged out soon due to security reasons'
+        expiryAlertMsg: canRefreshToken
       })
       this.getBooks()
     } else if (!canRefreshToken) {

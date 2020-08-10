@@ -7,6 +7,16 @@ import { withRouter } from 'react-router'
 import AuthContext from '../context/auth_context'
 
 /**
+ * Awaits clearing the refresh token and sets the URL to the login page
+ */
+const logout = async () => {
+  const result = await LocalStorage.clearToken()
+  if (result === 'Success') {
+    window.location.href = '/'
+  }
+}
+
+/**
  * Returns navbar depending on whether user is authenticated and their role
  */
 const Navigation = (props) => {
@@ -25,14 +35,14 @@ const Navigation = (props) => {
                   <Fragment>
                     <Nav.Link href='/books'>Home</Nav.Link>
                     <Nav.Link href='/books/add'>Add Book</Nav.Link>
-                    <Nav.Link href='/' onClick={() => LocalStorage.clearToken()}>Logout</Nav.Link>
+                    <Nav.Link href='#' onClick={logout}>Logout</Nav.Link>
                   </Fragment>
                 )
               } else {
                 return (
                   <Fragment>
                     <Nav.Link href='/books'>Home</Nav.Link>
-                    <Nav.Link href='/' onClick={() => LocalStorage.clearToken()}>Logout</Nav.Link>
+                    <Nav.Link href='#' onClick={logout}>Logout</Nav.Link>
                   </Fragment>
                 ) 
               }
