@@ -38,14 +38,13 @@ const clearToken = () => {
     token: getRefreshToken()
   }
   return new Promise((resolve, reject) => {
-    fetch('auth/logout', { method: 'DELETE', headers: APIHelper.getAPIHeaders(false), body: JSON.stringify(data) })
+    fetch('/auth/logout', { method: 'DELETE', headers: APIHelper.getAPIHeaders(false), body: JSON.stringify(data) })
     .then((res) => {
       if (res.status !== 204) {
         throw res
       }
       localStorage.removeItem('accessToken')
       localStorage.removeItem('refreshToken')
-      console.log('resolving')
       resolve('Success')
     })
     .catch((err) => {
@@ -81,7 +80,6 @@ const canRefreshToken = () => {
     } else if (exp - (Date.now()/1000) <= 120 && exp - (Date.now()/1000) > 0 && (Date.now()/1000) - iat > 3480) {
       resolve ('You will be logged out soon due to security reasons')
     } else if ((Date.now()/1000) >= exp) {
-      clearToken()
       resolve(false)
     } else {
       resolve(true) 

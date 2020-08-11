@@ -37,8 +37,11 @@ class BookList extends Component {
       })
       this.getBooks()
     } else if (!canRefreshToken) {
-      handleState(this.props, false)
-      this.setState({ isTokenExpired: true })
+      const result = await LocalStorage.clearToken()
+      if (result === 'Success') {
+        handleState(this.props, false)
+        this.setState({ isTokenExpired: true })
+      }
     } else {
       this.getBooks()
     }
@@ -224,7 +227,7 @@ class BookList extends Component {
 
   render() {
     if (this.state.isTokenExpired) {
-      return <Redirect to='/books' />
+      return <Redirect to='/' />
     }
 
     if (this.state.edit) {

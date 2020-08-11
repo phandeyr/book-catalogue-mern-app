@@ -23,8 +23,11 @@ class AddBook extends Component {
         expiryAlertMsg: canRefreshToken
       })
     } else if (!canRefreshToken) {
-      handleState(this.props, false)
-      this.setState({ isTokenExpired: true })
+      const result = await LocalStorage.clearToken()
+      if (result === 'Success') {
+        handleState(this.props, false)
+        this.setState({ isTokenExpired: true })
+      }
     }
   }
 
