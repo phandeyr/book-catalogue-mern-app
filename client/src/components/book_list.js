@@ -24,7 +24,7 @@ class BookList extends Component {
       delete: false,
       books: [],
       alertMsg: '',
-      showAlert: false,
+      showAlert: false
     }
   }
 

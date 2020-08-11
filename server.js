@@ -17,6 +17,7 @@ mongoose.connect(process.env.DB_CONNECTION_STRING,
 // Initialise express
 const app = express()
 app.use(cors())
+const port = process.env.PORT || 8000
 
 // Routes
 app.use(express.json())
@@ -24,4 +25,8 @@ app.use('/users', user)
 app.use('/books', book)
 app.use('/auth', auth)
 
-app.listen(8000, () => { console.log('server up and running') })
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('client/build'))
+}
+
+app.listen(port, () => { console.log('server up and running') })
