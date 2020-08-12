@@ -12,6 +12,7 @@ import { Result } from '../utils/result'
 import DeleteModal from '../components/delete_modal'
 import APIHelper from '../utils/api_helper'
 import { withContext, handleState } from '../context/auth_context'
+import { Path } from '../utils/paths'
 
 class BookList extends Component {
   constructor(props) {
@@ -51,7 +52,7 @@ class BookList extends Component {
         showAlert: true,
         alertMsg: this.props.location.state.msg
       })
-      this.props.history.replace('/books')
+      this.props.history.replace(Path.BOOKLIST)
     }
   }
 
@@ -231,7 +232,7 @@ class BookList extends Component {
     }
 
     if (this.state.edit) {
-      return <Redirect to={{pathname: '/books/edit', state: { id: this.state.id }}} />
+      return <Redirect to={{pathname: Path.EDIT_BOOK, state: { id: this.state.id }}} />
     }
 
     if (this.state.isLoading) {

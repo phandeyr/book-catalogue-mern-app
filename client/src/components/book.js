@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
+import { Path } from '../utils/paths'
 
 class Book extends Component {
   constructor(props) {
@@ -67,7 +68,7 @@ class Book extends Component {
 
   render() {
     if (this.state.cancel) {
-      return <Redirect to='/books' />
+      return <Redirect to={Path.BOOKLIST} />
     }
 
     return (

@@ -6,6 +6,7 @@ import LocalStorage from '../utils/local_storage'
 import Alert from 'react-bootstrap/Alert'
 import APIHelper from '../utils/api_helper'
 import { withContext, handleState } from '../context/auth_context'
+import { Path } from '../utils/paths'
 
 class LoginForm extends Component {
   constructor(props) {
@@ -54,7 +55,7 @@ class LoginForm extends Component {
 
   render() {
     if (this.state.logged_in) {
-      return <Redirect to='/books' />
+      return <Redirect to={Path.BOOKLIST} />
     }
 
     return (

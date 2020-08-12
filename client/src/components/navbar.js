@@ -5,6 +5,7 @@ import LocalStorage from '../utils/local_storage'
 import { Role } from '../utils/roles'
 import { withRouter } from 'react-router'
 import AuthContext from '../context/auth_context'
+import { Path } from '../utils/paths'
 
 /**
  * Awaits clearing the refresh token and sets the URL to the login page
@@ -33,15 +34,15 @@ const Navigation = (props) => {
               if (LocalStorage.getUserRole() === Role.ADMIN_ROLE) {
                 return (
                   <Fragment>
-                    <Nav.Link href='/books'>Home</Nav.Link>
-                    <Nav.Link href='/books/add'>Add Book</Nav.Link>
+                    <Nav.Link href={Path.BOOKLIST}>Home</Nav.Link>
+                    <Nav.Link href={Path.ADD_BOOK}>Add Book</Nav.Link>
                     <Nav.Link href='#' onClick={logout}>Logout</Nav.Link>
                   </Fragment>
                 )
               } else {
                 return (
                   <Fragment>
-                    <Nav.Link href='/books'>Home</Nav.Link>
+                    <Nav.Link href={Path.BOOKLIST}>Home</Nav.Link>
                     <Nav.Link href='#' onClick={logout}>Logout</Nav.Link>
                   </Fragment>
                 ) 

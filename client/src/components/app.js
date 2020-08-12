@@ -8,6 +8,7 @@ import AddBook from './add_book'
 import PrivateRoute from './private_route'
 import LocalStorage from '../utils/local_storage'
 import AuthContext from '../context/auth_context'
+import { Path } from '../utils/paths'
 
 class App extends Component {
   constructor(props) {
@@ -30,9 +31,9 @@ class App extends Component {
         <div className='container'>
           <Switch>
             <Route exact path='/' component={LoginForm} />
-            <PrivateRoute exact path='/books' component={BookList} />
-            <PrivateRoute path='/books/add' component={AddBook} />
-            <PrivateRoute path='/books/edit' component={EditBook} />
+            <PrivateRoute exact path={Path.BOOKLIST} component={BookList} />
+            <PrivateRoute path={Path.ADD_BOOK} component={AddBook} />
+            <PrivateRoute path={Path.EDIT_BOOK} component={EditBook} />
           </Switch>
         </div>
         </Router>

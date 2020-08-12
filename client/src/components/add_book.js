@@ -6,6 +6,7 @@ import { Result } from '../utils/result'
 import APIHelper from '../utils/api_helper'
 import Alert from 'react-bootstrap/Alert'
 import { withContext, handleState } from '../context/auth_context'
+import { Path } from '../utils/paths'
 
 class AddBook extends Component {
   constructor(props) {
@@ -76,7 +77,7 @@ class AddBook extends Component {
     }
 
     if (this.state.msg) {
-      return <Redirect to={{ pathname: '/books', state: { result: this.state.result, msg: this.state.msg }} } />
+      return <Redirect to={{ pathname: Path.BOOKLIST, state: { result: this.state.result, msg: this.state.msg }} } />
     }
 
     return(
